@@ -2,6 +2,7 @@ package gameassignment2;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 /**
  * Creating a simple information panel for our game to display.
@@ -9,7 +10,7 @@ import java.awt.Graphics;
  */
 public class HUD {
     
-     private  Player player;
+    private  Player player;
 
     public HUD(Player player) {
         this.player = player;
@@ -26,7 +27,12 @@ public class HUD {
         int level = player.getLevel();
         g.setColor(Color.gray);
         g.fillRect(15, 15, 200, 32);
-        g.setColor(new Color(255-HEALTH*2,HEALTH*2,0));
+        try{
+           g.setColor(new Color(255-HEALTH*2,HEALTH*2,0)); 
+        }catch(Exception e){
+            g.setColor(Color.RED);
+        }
+        
         g.fillRect(15, 15, HEALTH *2, 32);
         g.setColor(Color.white);
         g.drawRect(15, 15, 200, 32);

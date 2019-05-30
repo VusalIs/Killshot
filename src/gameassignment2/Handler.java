@@ -20,8 +20,13 @@ public class Handler implements Serializable{
     public void tick(){
         for (int i = 0; i < object.size(); i++){
             GameObject tempObject = object.get(i);
+            if(tempObject.getHealth() < -10) removeObject(tempObject);
             if(tempObject != null) tempObject.tick();
         }
+    }
+    
+    public void clearLevel(){
+        object.clear();
     }
     
     public void render(Graphics g){

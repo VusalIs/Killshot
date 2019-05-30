@@ -40,8 +40,6 @@ public class Player extends GameObject {
         playerWalkRight = new Animation(2, tex.playerRunRight);
         playerWalkLeft = new Animation(2, tex.playerRunLeft);
         playerIdle = new Animation(10, tex.playerIdle);
-        loader = new BufferedImageLoader();
-        nextLevel = loader.loadImage("/level.png");
         
         keyPressed[0] = false;
         keyPressed[1] = false;
@@ -66,7 +64,7 @@ public class Player extends GameObject {
 
     public void setHealth(int HEALTH) {
         
-        this.HEALTH = Game.clamp(HEALTH, 0, 100);
+        this.HEALTH = HEALTH;
     }
     public void keyboard(){
         if(keyPressed[1]) setVelX(-10); else if (keyPressed[2])setVelX(10); else velX = 0;
@@ -78,7 +76,7 @@ public class Player extends GameObject {
             keyPressed[0] = false;
         }
         if(keyPressed[5]){
-            this.handler.addObject(new Bullet(isFacing >0 ? x+45 : x - 25, y+48, ID.Bullet, isFacing, handler));
+            this.handler.addObject(new Bullet(isFacing >0 ? x+60 : x - 35, y+48, ID.Bullet, isFacing, handler, velX + 10));
             keyPressed[5] = false;
         }
     }
@@ -109,6 +107,9 @@ public class Player extends GameObject {
     
     @Override
     public void tick() {
+        if(y > Game.HEIGHT){
+            System.exit(0);
+        }
         if(isJumping || isFalling){
             onPlatform = false;
         }
@@ -126,10 +127,6 @@ public class Player extends GameObject {
         y += velY;
         
         if(isFalling || isJumping) velY+=gravity;
-        
-        
-        x = Game.clamp(x, 0, Game.WIDTH - (width+5));
-        y = Game.clamp(y, 0, Game.HEIGHT - (height+18));
      
         
         collision();
@@ -141,6 +138,12 @@ public class Player extends GameObject {
     private void collision() {
         for (int i = 0; i< handler.object.size(); i++){
             GameObject tmpObj = handler.object.get(i);
+            if(tmpObj.getId() == ID.Flag){
+                if(getBounds().intersects(tmpObj.getBounds())) {
+                    handler.clearLevel();
+                    Game.newLevel = true;
+                }
+            }
             
             if(tmpObj.getId() == ID.Cherry){
                 if(getBounds().intersects(tmpObj.getBounds())){

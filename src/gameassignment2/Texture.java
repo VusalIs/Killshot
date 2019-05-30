@@ -18,12 +18,18 @@ public class Texture {
     public BufferedImage playerIsJumpingRight = null;
     public BufferedImage playerIsJumpingLeft = null;
     public BufferedImage playerIsFalling = null;
+    public BufferedImage fire = null;
     public BufferedImage[] playerIdle = null;
     public BufferedImage[] playerRunRight = null;
     public BufferedImage[] playerRunLeft = null;
     public BufferedImage[] enemyRunLeft = null;
     public BufferedImage[] enemyRunRight = null;
     public BufferedImage[] cherryImages = null;
+    public BufferedImage[] intermediateEnemyLeft = null;
+    public BufferedImage[] intermediateEnemyRight = null;
+    public BufferedImage[] advancedEnemyRight = null;
+    public BufferedImage[] advancedEnemyLeft = null;
+    public BufferedImage[] flagAnimation = null;
     
     public Texture(){
         BufferedImageLoader loader = new BufferedImageLoader();
@@ -40,6 +46,7 @@ public class Texture {
         playerIsJumpingRight = loader.loadImage("/player-jump-1.png");
         playerIsJumpingLeft = loader.loadImage("/player-jump-left-1.png");
         playerIsFalling = loader.loadImage("/player-jump-2.png");
+        fire = loader.loadImage("/item-feedback-3.png");
         
         cherryImages = setImageArray("/cherry-", 7, loader);
         enemyRunLeft = setImageArray("/opossum-", 6, loader);
@@ -47,6 +54,11 @@ public class Texture {
         playerIdle = setImageArray("/player-idle-", 4, loader);
         playerRunRight = setImageArray("/player-run-", 6, loader);
         playerRunLeft = setImageArray("/player-run-left-", 6, loader);
+        intermediateEnemyLeft = setImageArray("/intermediate-enenym-left-", 4, loader);
+        intermediateEnemyRight = setImageArray("/intermediate-enenym-right-", 4, loader);
+        advancedEnemyRight = setImageArray("/advanced-enenym-right-", 4, loader);
+        advancedEnemyLeft = setImageArray("/advanced-enenym-left-", 4, loader);
+        flagAnimation = setImageArray("/flag", 6, loader);
     }
     
     private BufferedImage[] setImageArray(String mainPath, int count, BufferedImageLoader loader){

@@ -17,6 +17,7 @@ public class Enemy extends GameObject {
     private Animation enemyRunRight;
     private Animation enemyRunLeft;
     private Texture tex = Game.tex;
+    private ObjectHUD objectHUD;
     
     public Enemy(int x, int y, ID id, Handler handler) {
         super(x, y, id);
@@ -43,7 +44,6 @@ public class Enemy extends GameObject {
         
         enemyRunLeft.runAnimation();
         enemyRunRight.runAnimation();
-        
     }
 
     @Override

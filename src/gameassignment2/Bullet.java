@@ -17,11 +17,12 @@ public class Bullet extends GameObject{
     private int isFacing;
     private Handler handler;
     private boolean isHitted = false;
-    public Bullet(int x, int y, ID id, int isFacing, Handler handler) {
+    Texture tex = Game.tex;
+    public Bullet(int x, int y, ID id, int isFacing, Handler handler,int velX) {
         super(x, y, id);
         this.handler = handler;
         this.isFacing = isFacing;
-        velX = 5;
+        this.velX = velX;
     }
 
     @Override
@@ -31,26 +32,22 @@ public class Bullet extends GameObject{
 
     @Override
     public void tick() {
-        Bullet tmp = null;
         for(GameObject tmpObj : handler.object){
-            if(tmpObj.getId() != ID.Bullet && tmpObj.getBounds().intersects(getBounds())){
+            if((tmpObj.getId() != ID.Bullet && tmpObj.getId() != ID.Block) && tmpObj.getBounds().intersects(getBounds())){
                 tmpObj.setHealth(tmpObj.getHealth() - 10);
                 isHitted = true;
             }
-            if(tmpObj.getId() == ID.Bullet){
-                tmp = (Bullet) tmpObj;
-            }
         }
-        if(tmp != null && tmp.isHitted){
-            handler.removeObject(tmp);
+        if(isHitted){
+            handler.removeObject(this);
         }
+        
         x += velX*isFacing;
     }
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Color.blue);
-        g.fillRect(x, y, 16, 16);
+        g.drawImage(tex.fire, x, y, 24,24, null);
     }
 
     public boolean isHitted() {

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class Game extends Canvas implements Runnable{
 
-    public static final int WIDTH =  2300, HEIGHT = WIDTH / 2; // Your game Canvas dimensions.
+    public static final int WIDTH =  1200 , HEIGHT = 700; // Your game Canvas dimensions.
     private Window gameWindow;
     private Thread thread;
     private boolean running = false;
@@ -27,8 +27,10 @@ public class Game extends Canvas implements Runnable{
     private BufferedImage level;
     private BufferedImage background;
     private Camera cam;
+    public static boolean newLevel = false;
     private BufferedImage lastLevel;
     public static Texture tex;
+    public static int countOfLevel = 1;
 
     private boolean mouseState = false;
    
@@ -49,27 +51,11 @@ public class Game extends Canvas implements Runnable{
     public Game(){
         rand = new Random();
         tex = new Texture();
-        BufferedImageLoader bufferedImageLoader = new BufferedImageLoader();
-        level = bufferedImageLoader.loadImage("/level1.png");
-        lastLevel = bufferedImageLoader.loadImage("/level.png");
-        background = bufferedImageLoader.loadImage("/back.png");
-        
-        
-        handler = new Handler();
-        
-        
-        loadImageLevel(level);
-        cam = new Camera(0, 0);
-        hud = new HUD(player);
-        
-        this.addKeyListener(new KeyInput(this,player));
+        resetLevel();
         
         gameWindow = new Window(WIDTH,HEIGHT,"Game assignment 2",this);
         
-        if(gameState == STATE.GAME){
-            
-            handler.addObject(player);
-        }
+        
        
     }
 
@@ -98,7 +84,7 @@ public class Game extends Canvas implements Runnable{
         int h = bufferedImage.getHeight();
         MoveablePlatform moveable = new MoveablePlatform(0, 0, ID.Block);
         handler.addObject(moveable);
-
+        int xx =0,yy=0;
         for(int x = 0; x < w; x++){
             for(int y = 0; y < h; y++){
                 int pixel = bufferedImage.getRGB(x,y);
@@ -111,15 +97,47 @@ public class Game extends Canvas implements Runnable{
                     Block tmp = new Block(x*32, y*32, ID.Block);
                     moveable.addNewBlock(tmp);
                     handler.addObject(tmp);
-                }else if(red == 150 && green == 150 && blue == 150) handler.addObject(new Enemy(x*32, y*32, ID.Enemy, handler));
-                else if(red == 10 && green == 150 && blue == 150) handler.addObject(new Flag(x*32, y*32, ID.Cherry));
+                }else if(red == 150 && green == 150 && blue == 150) {
+                    GameObject tmp = new Enemy(x*32, y*32, ID.Enemy, handler);
+                    handler.addObject(tmp);
+                }
+                else if(red == 10 && green == 150 && blue == 150) {
+                    handler.addObject(new Cherry(x*32, y*32, ID.Cherry));
+                }
                 else if(red == 10 && green == 250 && blue == 150){
-                    player = new Player(x,y,ID.Player,handler);
+                    xx = x;
+                    yy = y;
                 }else if(red == 255 && green == 51 && blue == 153){
-                    handler.addObject(new BossEnemy(x*32, y*32, ID.Enemy, handler));
+                    GameObject tmp = new BossEnemy(x*32, y*32, ID.Enemy, handler);
+                    handler.addObject(tmp);
+                }else if(red ==150 && green == 150 && blue ==250){
+                    handler.addObject(new IntermediateEnemy(x*32, y*32, ID.Enemy, handler));
+                }else if(red == 200 && green == 150 && blue == 50){
+                    handler.addObject(new AdvancedEnemy(x*32, y*32, ID.Enemy, handler));
+                }else if(red == 255 && green == 215 && blue == 10){
+                    handler.addObject(new Flag(x*32, y*32, ID.Flag));
                 }
                 
             }
+        }
+        player = new Player(xx,yy,ID.Player,handler);
+    }
+    
+    
+    public void resetLevel(){
+        handler = new Handler();
+        cam = new Camera(0, 0);
+        BufferedImageLoader bufferedImageLoader = new BufferedImageLoader();
+        background = bufferedImageLoader.loadImage("/back.png");
+        level = bufferedImageLoader.loadImage("/level" + countOfLevel + ".png");
+        
+        loadImageLevel(level);
+        countOfLevel++;
+        hud = new HUD(player);
+        this.addKeyListener(new KeyInput(this,player));
+        if(gameState == STATE.GAME){
+            
+            handler.addObject(player);
         }
     }
 
@@ -156,6 +174,12 @@ public class Game extends Canvas implements Runnable{
     }
     
     private void tick() {
+        if(newLevel){
+            resetLevel();
+            cam.setX(0);
+            newLevel = false;
+            return;
+        }
       
         handler.tick();
         for(int i=0; i< handler.object.size(); i++){
@@ -192,11 +216,6 @@ public class Game extends Canvas implements Runnable{
         g.dispose();
         bs.show();
         
-    }
-    public static int clamp(int number,int min,int max){
-        if (number >= max)return number = max;
-        else if (number <= min) return number = min;
-        return number;
     }
 
     

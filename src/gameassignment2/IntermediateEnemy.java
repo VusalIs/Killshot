@@ -15,7 +15,7 @@ import java.awt.Rectangle;
  * @author Vusal
  */
 public class IntermediateEnemy extends GameObject{
-    private final int WIDTH = 50, HEIGHT = 80;
+    private final int WIDTH = 50, HEIGHT = 50;
     private Handler handler;
     private int velX = 3;
     private boolean isJumping = false;
@@ -24,12 +24,17 @@ public class IntermediateEnemy extends GameObject{
     private int isFacing = 10;
     private boolean isNear = false;
     private int playerX;
-    
+    private boolean right = true;
+    Texture tex = Game.tex;
+    private Animation playerWalkRight;
+    private Animation playerWalkLeft;
 
     public IntermediateEnemy(int x, int y, ID id, Handler handler) {
         super(x, y, id);
         this.handler = handler;
         health = 30;
+        playerWalkLeft = new Animation(2, tex.intermediateEnemyLeft);
+        playerWalkRight = new Animation(2, tex.intermediateEnemyRight);
     }
 
     @Override
@@ -42,15 +47,17 @@ public class IntermediateEnemy extends GameObject{
     }
     
     public Rectangle getRightBounds(){
-        return new Rectangle(x+ WIDTH -3, y+5, 5, HEIGHT -10);
+        return new Rectangle(x+ WIDTH -3, y+5, 5, HEIGHT -20);
     }
     
     public Rectangle getLeftBounds(){
-        return new Rectangle(x-2, y+5, 5, HEIGHT-10);
+        return new Rectangle(x-2, y+5, 5, HEIGHT-20);
     }
     
     @Override
     public void tick() {
+        playerWalkRight.runAnimation();
+        playerWalkLeft.runAnimation();
         for(GameObject tmpObj : handler.object){
             if(tmpObj.getId() == ID.Block){
                 if(getRightBounds().intersects(tmpObj.getBounds())){
@@ -80,22 +87,26 @@ public class IntermediateEnemy extends GameObject{
                 break;
             }
         }
-        System.out.println(velY);
         if(isNear){
             if(isFalling || isJumping) velY+=gravity;
+             if(velY>=10){
+                velY = 9;
+            }
             if(velX != 0) isFacing = playerX - x > 0 ? 1 : -1;
             y += velY;
-            if(playerX - x >0) x += velX;
-            else if(playerX- x <0) x -= velX;
+            if(playerX - x >0) {
+                right = true;
+                x += velX;
+            }
+            else if(playerX- x <0) {
+                right = false;
+                x -= velX;
+            }
             
         }
-        
-        x = Game.clamp(x, 0, Game.WIDTH - (WIDTH+5));
-        y = Game.clamp(y, 0, Game.HEIGHT - (HEIGHT+18));
     }
     
     private void jump(){
-        System.out.println(isJumping);
         if(!isJumping){
             velY = -10;
             isFalling = true;
@@ -105,19 +116,11 @@ public class IntermediateEnemy extends GameObject{
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Color.red);
-        g.fillRect(x, y, WIDTH, HEIGHT);
-        Graphics2D g2d = (Graphics2D)g;
-        g.setColor(Color.blue);
-        g2d.draw(getBounds());
-        g2d.draw(getLeftBounds());
-        g2d.draw(getRightBounds());
-        g2d.draw(getTopBounds());
-    }
-    
-    public static int clamp(int number,int min,int max){
-        if (number >= max)return number = max;
-        else if (number <= min) return number = min;
-        return number;
+        if(right){
+            playerWalkRight.drawAnimation(g, x, y, WIDTH, HEIGHT);
+        }else{
+            playerWalkLeft.drawAnimation(g, x, y, WIDTH, HEIGHT);
+        }
+        
     }
 }

@@ -21,11 +21,13 @@ public class BossEnemy extends GameObject{
     private final int gravity = 1;
     private boolean isJumping = true;
     private int milliseconds;
+    private ObjectHUD objectHUD;
     
     public BossEnemy(int x, int y, ID id, Handler handler) {
         super(x, y, id);
         this.handler = handler;
-        health = 300;
+        this.objectHUD = new ObjectHUD(this);
+        health = 100;
     }
 
     @Override
@@ -36,6 +38,7 @@ public class BossEnemy extends GameObject{
     @Override
     public void tick() {
         boolean previousValue = isJumping;
+        Player player = null;
         for(GameObject tmpObj : this.handler.object){
             if(tmpObj.id == ID.Block){
                 if(tmpObj.getBounds().intersects(getBounds())){
@@ -45,12 +48,13 @@ public class BossEnemy extends GameObject{
                 }
             }
             if(tmpObj.id == ID.Player){
-                if(isJumping == false && previousValue != isJumping){
-                    Player player = (Player) tmpObj;
-                    if(player.isOnPlatform()){
-                        tmpObj.setHealth(tmpObj.getHealth() - 40);
-                    }
-                }
+                player = (Player) tmpObj;
+            }
+        }
+        
+        if(isJumping == false && previousValue != isJumping){
+            if(player != null && player.isOnPlatform()){
+                player.setHealth(player.getHealth() - 40);
             }
         }
         
@@ -65,18 +69,21 @@ public class BossEnemy extends GameObject{
         }
         milliseconds++;
         if(milliseconds == 200){
-            handler.addObject(new Bullet(x - 32, y+ (int)(Math.random()*HEIGHT), ID.Bullet, -1, handler));
-            handler.addObject(new Bullet(x - 32, y+ (int)(Math.random()*HEIGHT), ID.Bullet, -1, handler));
+            handler.addObject(new Bullet(x - 32, y+ (int)(Math.random()*HEIGHT), ID.Bullet, -1, handler, 8));
+            handler.addObject(new Bullet(x - 32, y+ (int)(Math.random()*HEIGHT), ID.Bullet, -1, handler, 8));
             
         }
-        
+        objectHUD.tick();
         y += velY;
     }
 
     @Override
     public void render(Graphics g) {
+        
         g.setColor(Color.red);
         g.fillRect(x, y, WIDTH, HEIGHT);
+        objectHUD.render(g);
+        
     }
     
 }

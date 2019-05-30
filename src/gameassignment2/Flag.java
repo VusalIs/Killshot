@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package gameassignment2;
 
 import java.awt.Graphics;
@@ -10,17 +11,16 @@ import java.awt.Rectangle;
 
 /**
  *
- * @author Vusal
+ * @author vusalis
  */
 public class Flag extends GameObject{
-    
-    private int width = 40, height = 40;
-    private Animation cherry;
+    private int width = 40, height = 60;
+    private Animation flag;
     private Texture tex = Game.tex;
 
     public Flag(int x, int y, ID id) {
         super(x, y, id);
-        cherry = new Animation(10, tex.cherryImages);
+        flag = new Animation(10, tex.flagAnimation);
     }
 
     @Override
@@ -30,12 +30,11 @@ public class Flag extends GameObject{
 
     @Override
     public void tick() {
-        cherry.runAnimation();
+        flag.runAnimation();
     }
 
     @Override
     public void render(Graphics g) {
-        cherry.drawAnimation(g, x-3, y-5, width, height);
+        flag.drawAnimation(g, x-3, y-5, width, height);
     }
-    
 }

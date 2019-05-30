@@ -16,7 +16,7 @@ import java.awt.Rectangle;
  */
 public class AdvancedEnemy extends GameObject{
     
-    private final int WIDTH = 50, HEIGHT = 80;
+    private final int WIDTH = 50, HEIGHT = 50;
     private Handler handler;
     private int velX = 3;
     private boolean isJumping = false;
@@ -24,13 +24,19 @@ public class AdvancedEnemy extends GameObject{
     private int gravity = 1;
     private int isFacing = 10;
     private boolean isNear = false;
-    private int milliseconds;
+    private int milliseconds = 0;
     private int playerX;
+    Texture tex = Game.tex;
+    private boolean right = true;
+    private Animation enemyWalkRight;
+    private Animation enemyWalkLeft;
 
     public AdvancedEnemy(int x, int y, ID id, Handler handler) {
         super(x, y, id);
         this.handler = handler;
         health = 60;
+        enemyWalkLeft = new Animation(2, tex.advancedEnemyLeft);
+        enemyWalkRight = new Animation(2, tex.advancedEnemyRight);
     }
 
     @Override
@@ -43,15 +49,17 @@ public class AdvancedEnemy extends GameObject{
     }
     
     public Rectangle getRightBounds(){
-        return new Rectangle(x+ WIDTH -3, y+5, 5, HEIGHT -10);
+        return new Rectangle(x+ WIDTH -3, y+5, 5, HEIGHT - 20);
     }
     
     public Rectangle getLeftBounds(){
-        return new Rectangle(x-2, y+5, 5, HEIGHT-10);
+        return new Rectangle(x-3, y+5, 5, HEIGHT-20);
     }
     
     @Override
     public void tick() {
+        enemyWalkLeft.runAnimation();
+        enemyWalkRight.runAnimation();
         for(GameObject tmpObj : handler.object){
             if(tmpObj.getId() == ID.Block){
                 if(getRightBounds().intersects(tmpObj.getBounds())){
@@ -61,7 +69,7 @@ public class AdvancedEnemy extends GameObject{
                     x = tmpObj.getX() + 34;
                     jump();
                 }else if(getBounds().intersects(tmpObj.getBounds())){
-                    y = tmpObj.getY() - HEIGHT;
+                    y = tmpObj.getY() - HEIGHT-2;
                     velY = 0;
                     isFalling = false;
                     isJumping = false;
@@ -85,19 +93,23 @@ public class AdvancedEnemy extends GameObject{
             if(isFalling || isJumping) velY+=gravity;
             if(velX != 0) isFacing = playerX - x > 0 ? 1 : -1;
             y += velY;
-            if(playerX - x >0) x += velX;
-            else if(playerX- x <0) x -= velX;
+            if(playerX - x >0){
+                x += velX;
+                right = true;
+            }
+            else if(playerX- x <0) {
+                x -= velX;
+                right = false;
+            }
             
         }
         
-        x = Game.clamp(x, 0, Game.WIDTH - (WIDTH+5));
-        y = Game.clamp(y, 0, Game.HEIGHT - (HEIGHT+18));
-        
         milliseconds++;
         
-        if(milliseconds > 300){
+        if(milliseconds > 100){
+            System.out.println("fire");
             milliseconds = 0;
-            this.handler.addObject(new Bullet(x, y+48, ID.Bullet, isFacing, handler));
+            this.handler.addObject(new Bullet(playerX- x > 0 ? x+WIDTH+10:x-20, y+24, ID.Bullet, isFacing, handler, velX+10));
         }
         
     }
@@ -112,19 +124,7 @@ public class AdvancedEnemy extends GameObject{
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Color.red);
-        g.fillRect(x, y, WIDTH, HEIGHT);
-        Graphics2D g2d = (Graphics2D)g;
-        g.setColor(Color.blue);
-        g2d.draw(getBounds());
-        g2d.draw(getLeftBounds());
-        g2d.draw(getRightBounds());
-        g2d.draw(getTopBounds());
-    }
-    
-    public static int clamp(int number,int min,int max){
-        if (number >= max)return number = max;
-        else if (number <= min) return number = min;
-        return number;
+        if(right) enemyWalkRight.drawAnimation(g, x, y, WIDTH, HEIGHT);
+        else enemyWalkLeft.drawAnimation(g, x, y, WIDTH, HEIGHT);
     }
 }

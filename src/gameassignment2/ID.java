@@ -5,5 +5,5 @@ package gameassignment2;
  * @author Sayid Akhundov
  */
 public enum ID {
-    Player,Enemy,Coin,Block,Cherry,Bullet;
+    Player,Enemy,Coin,Block,Cherry,Bullet,Hud,Flag;
 }
