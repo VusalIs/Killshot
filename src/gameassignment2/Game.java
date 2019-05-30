@@ -115,6 +115,8 @@ public class Game extends Canvas implements Runnable{
                 else if(red == 10 && green == 150 && blue == 150) handler.addObject(new Flag(x*32, y*32, ID.Cherry));
                 else if(red == 10 && green == 250 && blue == 150){
                     player = new Player(x,y,ID.Player,handler);
+                }else if(red == 255 && green == 51 && blue == 153){
+                    handler.addObject(new BossEnemy(x*32, y*32, ID.Enemy, handler));
                 }
                 
             }

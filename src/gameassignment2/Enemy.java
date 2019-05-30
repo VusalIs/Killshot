@@ -22,6 +22,7 @@ public class Enemy extends GameObject {
         super(x, y, id);
         this.handler = handler;
         velX =5;
+        health = 10;
         enemyRunRight = new Animation(2, tex.enemyRunRight);
         enemyRunLeft = new Animation(2, tex.enemyRunLeft);
         

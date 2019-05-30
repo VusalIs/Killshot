@@ -19,8 +19,10 @@ public class Player extends GameObject {
     private boolean isFalling = true;
     private int gravity = 1;
     private BufferedImageLoader loader;
+    private int isFacing = 1;
+    private boolean onPlatform = true;
     
-    boolean[] keyPressed = new boolean[5];
+    boolean[] keyPressed = new boolean[6];
     Texture tex = Game.tex;
     private Animation playerWalkRight;
     private Animation playerWalkLeft;
@@ -46,6 +48,7 @@ public class Player extends GameObject {
         keyPressed[2] = false;
         keyPressed[3] = false;
         keyPressed[4] = false;
+        keyPressed[5] = false;
     
     }
 
@@ -53,7 +56,7 @@ public class Player extends GameObject {
         return Score;
     }
     
-    public int getHEALTH() {
+    public int getHealth() {
         return HEALTH;
     }
 
@@ -61,7 +64,7 @@ public class Player extends GameObject {
         this.Score = Score;
     }
 
-    public void setHEALTH(int HEALTH) {
+    public void setHealth(int HEALTH) {
         
         this.HEALTH = Game.clamp(HEALTH, 0, 100);
     }
@@ -74,25 +77,46 @@ public class Player extends GameObject {
             setIsJumping(true);
             keyPressed[0] = false;
         }
+        if(keyPressed[5]){
+            this.handler.addObject(new Bullet(isFacing >0 ? x+45 : x - 25, y+48, ID.Bullet, isFacing, handler));
+            keyPressed[5] = false;
+        }
     }
     
     public  void hit(GameObject obj){
     
         if(obj.getId() == ID.Enemy){
             if(getBounds().intersects(obj.getBounds())){
-                setHEALTH(getHEALTH()-1);
+                setHealth(getHealth()-1);
                 
             }
         }
       
     }
     public  void eat(){
-        setHEALTH(getHEALTH()+2);
+        setHealth(getHealth()+2);
     }
+
+    public boolean isOnPlatform() {
+        return onPlatform;
+    }
+
+    public void setOnPlatform(boolean onPlatform) {
+        this.onPlatform = onPlatform;
+    }
+    
+    
     
     @Override
     public void tick() {
-        if(getHEALTH() <=0){
+        if(isJumping || isFalling){
+            onPlatform = false;
+        }
+        
+        if(velX != 0){
+            isFacing = velX>0?1:-1;
+        }
+        if(getHealth() <=0){
             System.exit(0);
         }
         int tempY = y;

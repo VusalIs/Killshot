@@ -21,7 +21,7 @@ public class HUD {
 
   
     public void render(Graphics g) {
-        int HEALTH = player.getHEALTH();
+        int HEALTH = player.getHealth();
         int score = player.getScore();
         int level = player.getLevel();
         g.setColor(Color.gray);

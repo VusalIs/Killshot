@@ -14,7 +14,7 @@ public class KeyInput extends KeyAdapter {
     private Game game;
     
     private Player player;
-    private boolean[] keyPressed = new boolean[4];
+    private boolean[] keyPressed = new boolean[5];
     public KeyInput(Game game,Player player) {
         this.player = player;
         
@@ -41,6 +41,9 @@ public class KeyInput extends KeyAdapter {
             if(key == KeyEvent.VK_SPACE) {
                player.keyPressed[0] = true;
             }
+            if(key == KeyEvent.VK_C) {
+               player.keyPressed[5] = true;
+            }
             
         }
     }
@@ -60,6 +63,7 @@ public class KeyInput extends KeyAdapter {
             if(key == KeyEvent.VK_LEFT) player.keyPressed[1] = false;
             if(key == KeyEvent.VK_DOWN) player.keyPressed[4] = false;
             if(key == KeyEvent.VK_RIGHT) player.keyPressed[2] = false;
+            if(key == KeyEvent.VK_C) { player.keyPressed[5] = false;}
             
             
         }

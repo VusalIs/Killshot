@@ -12,11 +12,20 @@ public abstract class GameObject implements Serializable {
     protected int x,y ;
     protected ID id;
     protected int velX,velY;
+    protected int health;
 
     public GameObject(int x, int y, ID id) {
         this.x = x;
         this.y = y;
         this.id = id;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 
     public void setVelX(int velX) {
