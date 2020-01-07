@@ -3,11 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Projects/Killshot/src/gameassignment2/ID.java</file>
-            <file>file:/C:/Projects/Killshot/src/gameassignment2/HUD.java</file>
             <file>file:/C:/Projects/Killshot/src/gameassignment2/Game.java</file>
-            <file>file:/C:/Projects/Killshot/src/gameassignment2/GameObject.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/ObjectHUD.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/Texture.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/Flag.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/Enemy.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/Bullet.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/Animation.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/Player.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/AdvancedEnemy.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/IntermediateEnemy.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/Block.java</file>
             <file>file:/C:/Projects/Killshot/src/gameassignment2/BossEnemy.java</file>
+            <file>file:/C:/Projects/Killshot/src/gameassignment2/HUD.java</file>
         </group>
     </open-files>
 </project-private>
